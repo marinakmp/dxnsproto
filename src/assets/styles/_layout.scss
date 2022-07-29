@@ -1,0 +1,38 @@
+.mb-1 {
+  margin-bottom: .5rem;
+}
+.mb-2 {
+  margin-bottom: 1rem;
+}
+.mb-3 {
+  margin-bottom: 1.25rem;
+}
+.mb-4 {
+  margin-bottom: 2rem;
+}
+
+.container,
+.container-sm {
+  padding-left: $grid-gutter / 2;
+  padding-right: $grid-gutter / 2;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1320px;
+}
+.container-sm {
+  max-width: 626px;
+}
+
+.flex-center {
+  @extend %flex-center;
+}
+.flex-justified-center {
+  @extend %flex;
+  @extend %flex-jc-between;
+  @extend %flex-ai-center;
+}
+
+.pos-relative {
+  position: relative;
+}

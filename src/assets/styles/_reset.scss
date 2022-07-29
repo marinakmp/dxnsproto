@@ -1,0 +1,67 @@
+// Reboot
+// Normalization of HTML elements based on Normalize.css
+
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: 0 !important;
+}
+
+// Typography
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 1.5em;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+b,
+strong {
+  font-weight: $font-weight-bold;
+}
+
+// Images
+img {
+  vertical-align: middle;
+  border-style: none; // Remove the border on images inside links in IE 10-.
+}
+
+// Forms
+input,
+button,
+select,
+optgroup,
+textarea {
+  margin: 0; // Remove the margin in Firefox and Safari
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+button,
+select {
+  text-transform: none; // Remove the inheritance of text transform in Firefox
+}
+
+button {
+  border-radius: 0;
+  -webkit-appearance: button;
+  overflow: visible; // Show the overflow in Edge
+  text-transform: none; // Remove the inheritance of text transform in Firefox
+  -webkit-appearance: button; // Correct the inability to style clickable types in iOS and Safari.
+}
+
+button:focus:not(:focus-visible) {
+  outline: 0;
+}
+
+// Opinionated: add "hand" cursor to non-disabled button elements.
+button:not(:disabled) {
+  cursor: pointer;
+}
