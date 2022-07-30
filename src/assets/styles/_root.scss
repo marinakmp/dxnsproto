@@ -1,8 +1,21 @@
 :root {
-  --body-bg: #fff;
-  --border-color: #C5C5C5;
-  --brand-a-color: #93051A;
-  --brand-b-color: #EF8200;
+  --body-bg: #{$body-bg};
+  --body-color: #{$body-color};
+  --border-color: #{$border-color};
+  --brand-pc-bg: #{$brand-pc-bg};
+  --brand-3dmark-bg: #{$brand-3dmark-bg};
+  --graph-gutter: #{$graph-gutter-sm};
+  --graph-bar-bg: #{$graph-bar-bg};
+  --graph-bar-color: #{$graph-bar-color};
+  --graph-bar-active-color: #{$graph-bar-active-color};
   --grid-gutter: #{$grid-gutter};
-  --primary: #BE0F34;
+  --primary: #{$primary};
+  --primary-text-color: #{$primary-text-color};
+}
+
+
+@media (min-width: #{$breakpoint-lg}) {
+  :root {
+    --graph-gutter: #{$graph-gutter};
+  }
 }

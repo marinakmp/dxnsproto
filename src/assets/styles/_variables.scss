@@ -1,7 +1,43 @@
-$grid-gutter:                2rem;
+// Colors
+$primary:                    #BE0F34;
+$primary-text-color:         #fff;
+$body-bg:                    #fff;
+$body-color:                 #2E2E2E;
+
+$border-color:               #C5C5C5;
+
+// Grid
+$grid-gutter:                32px;
+$container-max-width:        1320px;
+$container-sm-max-width:     626px + $grid-gutter;
+
+$breakpoint-md:              768px;
+$breakpoint-lg:              992px;
+
+// Type
 $font-weight-normal:         500;
 $font-weight-thin:           400;
 $font-weight-bold:           700;
+$text-muted:                 #737373;
+
+$font-size-small:            0.875em;
+
+// Logo
 $app-logo-width:             64px;
-$icon-pointer-l:             url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path fill='#2E2E2E' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/></svg>");
-$icon-pointer-r:             url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path fill='#2E2E2E' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/></svg>");
+
+// Graph
+$graph-gutter-sm:            3px;
+$graph-gutter:               6px;
+$graph-bar-bg:               #EFEFEF;
+$graph-bar-color:            $body-color;
+$graph-bar-step:             40px;
+$graph-bar-active-color:     #FFF;
+$brand-pc-bg:                #93051A;
+$brand-3dmark-bg:            #EF8200;
+
+// Icons
+$icon-polygon-line:          url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='78' viewBox='0 0 68 78'><path fill='#{$primary}' d='M34 78 .2 58.5v-39L34 0l33.8 19.5v39L34 78zM4.2 56.2 34 73.4l29.8-17.2V21.8L34 4.6 4.2 21.8v34.4z'/></svg>");
+$icon-polygon:               url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='112' height='128' viewBox='0 0 112 128'><path fill='#{$primary}' d='M56 0L111.426 32V96L56 128L0.574375 96V32L56 0Z'/></svg>");
+// TODO
+$icon-pointer-l:             url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path fill='#{$body-color}' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/></svg>");
+$icon-pointer-r:             url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path fill='#{$body-color}' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/></svg>");

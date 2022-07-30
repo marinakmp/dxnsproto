@@ -1,19 +1,19 @@
 .btn {
   background-color: #EFEFEF;
-  border-width: 0;
+  border: 1px solid #fff;
   text-align: center;
   font-size: 1rem;
+
+  &:hover, &:focus {
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
+  }
 }
 
 .btn-icon-prev,
 .btn-icon-next {
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  //position: absolute;
-  //top: 50%;
-  //left: 0;
-  //margin-top: -14px;
+  width: 30px;
+  height: 30px;
 }
 //.btn-icon-prev {
 //  background-image: escape-svg($icon-pointer-l);
@@ -23,3 +23,21 @@
 //  right: 0;
   //background-image: escape-svg($icon-pointer-r);
 //}
+
+.btn-toggle {
+  background-color: #fff;
+  flex-grow: 1;
+  padding: 1rem .5rem 1rem 1rem;
+
+  &::after {
+    content: '';
+    border-style: solid;
+    border-width: 0 0 1px 1px;
+    line-height: 1;
+    margin-left: .625rem;
+    height: .5em;
+    width: .5em;
+    transform: rotate(-45deg);
+    transform-origin: top;
+  }
+}

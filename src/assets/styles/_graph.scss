@@ -1,0 +1,100 @@
+// Product score
+.product-score-section {
+  border-top: 2px solid var(--primary);
+  padding-top: 2.5rem;
+}
+
+// Graph
+.score-graph {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  margin-left: calc(var(--graph-gutter) * -1);
+  margin-right: calc(var(--graph-gutter) * -1);
+}
+.graph-bar {
+  background-color: var(--graph-bar-bg);
+  color: var(--graph-bar-color);
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-grow: 1;
+  line-height: 1.25;
+  max-width: 100%;
+  padding: var(--graph-gutter) calc(var(--graph-gutter) * 2);
+  margin-left: var(--graph-gutter);
+  margin-right: var(--graph-gutter);
+  min-height: $graph-bar-step;
+  position: relative;
+
+  &::after {
+    content: '';
+    border-style: solid;
+    border-width: 10px 8px 0 8px;
+    border-color: var(--brand-pc-bg) transparent transparent transparent;
+    display: inline-block;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  @for $i from 2 through 4 {
+    &:nth-child(#{$i}) {
+      height: #{$i * $graph-bar-step};
+    }
+  }
+
+  &._active {
+    background-color: var(--brand-pc-bg);
+    color: var(--graph-bar-active-color);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+[data-graph-scope="3dmark"] .graph-bar._active {
+  background-color: var(--brand-3dmark-bg);
+
+  &::after {
+    border-top-color: var(--brand-3dmark-bg);
+  }
+}
+
+[data-graph="threshhold"] {
+  font-size: 0.625rem;
+  font-weight: $font-weight-thin;
+
+  &:empty {
+    display: none;
+  }
+}
+.score-level-text {
+  line-height: 1.429;
+}
+
+@media (min-width: #{$breakpoint-md}) {
+  .product-score-section {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .product-score {
+    flex: 0 0 40%;
+    max-width: 40%;
+
+    + .product-score {
+      margin-left: auto;
+    }
+  }
+}
+
+@media (min-width: #{$breakpoint-lg}) {
+
+}

@@ -26,6 +26,13 @@ strong {
   font-weight: $font-weight-bold;
 }
 
+ol,
+ul,
+dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
 // Images
 img {
   vertical-align: middle;
@@ -41,6 +48,7 @@ textarea {
   margin: 0; // Remove the margin in Firefox and Safari
   font-family: inherit;
   font-size: 1rem;
+  font-weight: $font-weight-normal;
   line-height: inherit;
 }
 

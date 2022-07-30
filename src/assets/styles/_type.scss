@@ -3,11 +3,25 @@ a {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 1.500rem; // 24
 }
 
+h2,
 .fs-2 {
-  font-size: 1.250rem;
+  font-size: 1.250rem; // 20
+}
+.fs-3 {
+  font-size: 1.125rem; // 18
+}
+
+.fw-normal {
+  font-weight: $font-weight-normal;
+}
+.fw-thin {
+  font-weight: $font-weight-thin;
+}
+.fw-bold {
+  font-weight: $font-weight-bold;
 }
 
 .visually-hidden {
@@ -23,9 +37,18 @@ h1 {
 }
 
 .text-small {
-  font-size: 0.875rem;
+  font-size: $font-size-small;
 }
 
 .text-center {
   text-align: center;
+}
+
+.text-muted {
+  color: $text-muted;
+}
+
+.bg-primary {
+  background-color: var(--primary);
+  color: var(--primary-text-color);
 }
