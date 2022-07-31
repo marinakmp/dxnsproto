@@ -261,6 +261,9 @@
 
     if (!productCurrent) return;
 
+    // Update FPS data
+    gamesPlaceholder.querySelector('a._active').click();
+
     // Set controls state
     setControlsState(0);
 
