@@ -4,10 +4,14 @@
   const _doc = document;
   const gamesPlaceholder = _doc.getElementById('gamesCollection');
   const dropdownToggle = _doc.getElementById('gamesToggle');
+  const gamesControlPrev = _doc.getElementById('gamesControlPrev');
+  const gamesControlNext = _doc.getElementById('gamesControlNext');
+  const productsSelectionEl = _doc.getElementById('productsSelection');
+  let gamesCount;
   let dataFetched;
-  // let productsList, productCurrent;
+  let productCurrent;
+  let productsList;
   let gamesCollection = [];
-  let graphLevels = {'graph1': [], 'graph2': []};
 
   // Fetch func
   async function fetchData(url = './api/benchmark.json') {
@@ -28,25 +32,36 @@
     if (!product || graphs.length === 0) return;
 
     graphs.forEach( (g) => {
+      const benchmarksData = dataFetched?.benchmarks;
       const timeSpyVal = +product?.['3DMark_Time_Spy_CPU_score'];
       const is3dMark = g.dataset['graphScope'] === SCOPE_3DMARK_NAME;
       const timeSpyEl = g.querySelector('[data-graph="timespy"]');
       const bar3dmarkNodes = g.querySelectorAll('[data-benchmark]');
       let range = [];
       let closest;
+      let activeLevelKey;
+      let activeLevelKeyEntry;
+      let descriptionEl = g.querySelector('[data-graph="description"]');
 
       if (!is3dMark) {
         g.querySelectorAll('.graph-bar-title').forEach(b => {
-          b.innerText === product['PCMark_Category']
-            ? b.parentElement.classList.add(CLASS_ACTIVE)
-            : b.parentElement.classList.remove(CLASS_ACTIVE);
+
+
+          if (b.innerText === product['PCMark_Category']) {
+            b.parentElement.classList.add(CLASS_ACTIVE);
+            activeLevelKey = b.parentElement.dataset?.['benchmarkName'];
+            descriptionEl && activeLevelKey && (descriptionEl.innerText = benchmarksData?.['pcmark']?.[activeLevelKey]?.text)
+
+          } else {
+            b.parentElement.classList.remove(CLASS_ACTIVE);
+          }
         });
 
       } else {
         timeSpyEl.innerHTML = timeSpyVal;
 
         bar3dmarkNodes.forEach(b => {
-          range.push(+b.dataset['benchmark']) ;
+          range.push(+b.dataset['benchmark']);
         });
 
         closest = range.reduce(function(prev, curr) {
@@ -54,33 +69,50 @@
         });
 
         bar3dmarkNodes.forEach(b => {
-          closest === +b.dataset['benchmark']
-           ? b.classList.add(CLASS_ACTIVE)
-           : b.classList.remove(CLASS_ACTIVE);
+          if (closest === +b.dataset['benchmark']) {
+            b.classList.add(CLASS_ACTIVE);
+            activeLevelKey = b.dataset?.['benchmarkName'];
+          } else {
+            b.classList.remove(CLASS_ACTIVE);
+          }
         });
+
+        activeLevelKeyEntry = benchmarksData?.['3dmark']?.[activeLevelKey];
+
+        if (descriptionEl && activeLevelKeyEntry) {
+          descriptionEl.innerHTML = `<strong>${activeLevelKeyEntry?.title}</strong> ${activeLevelKeyEntry?.text}`;
+        }
       }
     });
   }
 
   // Game FPS
-  function animateFPS(counters) {
-    const speed = 200;
 
-    counters.forEach(counter => {
-      const animate = () => {
-        const value = +counter.getAttribute('data-count');
-        const data = +counter.innerText;
-        const time = value / speed;
+  function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
 
-        if (data < value) {
-          counter.innerText = Math.ceil(data + time);
-          setTimeout(animate, 1);
-        } else {
-          counter.innerText = value;
-        }
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      obj.innerHTML = Math.floor(progress * (end - start) + start);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
       }
+    };
+    window.requestAnimationFrame(step);
+  }
 
-      animate();
+
+  function animateFPS(counters) {
+    counters.forEach(counter => {
+        const value = +counter.getAttribute('data-count');
+
+        if (isNaN(value)) {
+          counter.innerText = '?';
+          return;
+        }
+
+        animateValue(counter, 0, value, 800);
     });
   }
 
@@ -95,24 +127,28 @@
   }
 
   // Games collection
-  function setGamesCollection(item) {
+  function setGamesCollection(games = {}) {
     let options = '';
     let activeClass;
 
-    if(!item && item.length === 0) return;
+    gamesCollection = Object.keys(games);
+    gamesCount = gamesCollection.length;
 
-    gamesCollection = Object.keys(item);
+    if(gamesCount === 0) return;
 
     gamesCollection.map((game,idx) => {
       activeClass = idx === 0 && CLASS_ACTIVE;
-      options += `<li><a class="dropdown-item ${activeClass}" href="#${game}" data-index="${idx}">${game}</a></li>`;
+      options += `<li><a class="dropdown-item ${activeClass}" href="#${game}" data-index="${idx}" data-key="${game}">${game}</a></li>`;
     });
 
     dropdownToggle.innerText = gamesCollection[0];
     gamesPlaceholder.innerHTML = options;
 
+    // Set controls state
+    setControlsState(0);
+
     // Set FPS
-    setFPS(item[gamesCollection[0]])
+    setFPS(games[gamesCollection[0]]);
   }
 
   // Dropdown toggle
@@ -131,9 +167,9 @@
 
   // Dropdown selection
   gamesPlaceholder.addEventListener('click', (e) => {
-    const curTarget = e.currentTarget;
     const nextSelected = e.target;
     const nodes = gamesPlaceholder.querySelectorAll('a.dropdown-item');
+    const nextSelectedIdx = +nextSelected?.dataset?.['index'];
 
     for (let node of nodes) {
       node.classList.remove(CLASS_ACTIVE)
@@ -141,30 +177,122 @@
 
     nextSelected.classList.add(CLASS_ACTIVE);
 
-    dropdownToggle.innerText = nextSelected.innerText;
+    dropdownToggle.textContent = nextSelected.textContent;
     dropdownToggle.setAttribute('aria-expanded', 'false');
+    gamesPlaceholder.classList.remove('_show');
 
-    curTarget && curTarget.classList.remove('_show');
+    // Set controls state
+    setControlsState(nextSelectedIdx);
+
+    // Set FPS
+    setFPS(productCurrent['Games']?.[nextSelected.textContent]);
+
+    e.preventDefault();
+  });
+
+  // Dropdown controls
+  // State
+  function setControlsState(idx) {
+    if (isNaN(idx) || !gamesControlPrev || !gamesControlNext) return;
+
+    if (idx === 0) {
+      gamesControlPrev.setAttribute('disabled', 'disabled');
+      gamesControlPrev.classList.add('_disabled');
+    } else {
+      gamesControlPrev.removeAttribute('disabled');
+      gamesControlPrev.classList.remove('_disabled');
+    }
+
+    if (idx === gamesCount - 1) {
+      gamesControlNext.setAttribute('disabled', 'disabled');
+      gamesControlNext.classList.add('_disabled');
+    } else {
+      gamesControlNext.removeAttribute('disabled');
+      gamesControlNext.classList.remove('_disabled');
+    }
+  }
+
+  // Event handlers
+  gamesControlPrev && gamesControlPrev.addEventListener('click', (e) => {
+    const gameCurrent = gamesPlaceholder.querySelector(`a.${CLASS_ACTIVE}`);
+    // If index invalid get first item on the list
+    const gameIdx = +gameCurrent?.dataset?.['index'] || 0;
+    let gamePrev;
+
+    if (gameIdx === 0) {
+      gamesControlPrev.setAttribute('disabled', 'disabled');
+      gamesControlPrev.classList.add('_disabled');
+    } else {
+      gamesControlPrev.removeAttribute('disabled');
+      gamesControlPrev.classList.remove('_disabled');
+      gamePrev = gameIdx && gamesPlaceholder.querySelector('.dropdown-item[data-index="' + (gameIdx - 1) + '"]');
+      gamePrev && gamePrev.click();
+    }
+  });
+
+  gamesControlNext && gamesControlNext.addEventListener('click', (e) => {
+    const gameCurrent = gamesPlaceholder.querySelector(`a.${CLASS_ACTIVE}`);
+    // If index invalid get first item on the list
+    const gameIdx = (+gameCurrent?.dataset?.['index'] ?? 0) + 1;
+    let gameNext;
+
+    if (gameIdx > gamesCount - 1) {
+      gamesControlNext.setAttribute('disabled', 'disabled');
+      gamesControlNext.classList.add('_disabled');
+    } else {
+      gamesControlNext.removeAttribute('disabled');
+      gamesControlNext.classList.remove('_disabled');
+      gameNext = gameIdx && gamesPlaceholder.querySelector('.dropdown-item[data-index="' + gameIdx + '"]');
+      gameNext && gameNext.click();
+    }
+  });
+
+  // Products list on change handler
+  productsSelectionEl && productsSelectionEl.addEventListener('change', function () {
+    const val = this.value;
+
+    // Hide dropdown
+    dropdownToggle.setAttribute('aria-expanded', 'false');
+    gamesPlaceholder.classList.remove('_show');
+
+    val && productsList.map((p) => {
+      p.sku === val && (productCurrent = p);
+    });
+
+    if (!productCurrent) return;
+
+    // Set controls state
+    setControlsState(0);
+
+    // Set benchmark data
+    updateGraphs(productCurrent);
   });
 
   // Fetch data - initial state
   fetchData().then(data => {
-    dataFetched = data || [];
-    const firstItem = data.length > 0 && data[0];
+    let productSkus = [];
 
-    if (!firstItem) return;
+    dataFetched = data;
+    productCurrent = data?.products?.[0];
+    productsList = data?.products || [];
+
+    if (!productCurrent) return;
 
     // Set collection of games
-    setGamesCollection(firstItem?.["Games"])
+    setGamesCollection(productCurrent?.["Games"])
 
-    // Set PCMark10 category active & category text
-    updateGraphs(firstItem);
+    // Set benchmark data
+    updateGraphs(productCurrent);
 
-    // Set 3DMark category active & category text, time spy
+    // Set products list
+    if (productsSelectionEl && productsList && productsList.length > 0) {
+      productsList.map((p) => {
+        !productSkus.includes(p?.sku) && productSkus.push(`<option value='${p?.sku}'">${p?.sku}</option>`)
+      });
+      productsSelectionEl.innerHTML = productSkus.join(',');
+    }
 
   }).catch(error => {
-    error.message;
+    console.error(error.message);
   });
-
-
 })();

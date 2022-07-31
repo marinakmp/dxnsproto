@@ -4,5 +4,6 @@
 *.iws
 
 # Global
-build/
 node_modules/
+
+src/assets/css

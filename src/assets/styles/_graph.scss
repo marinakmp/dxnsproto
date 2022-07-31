@@ -12,6 +12,7 @@
   margin-left: calc(var(--graph-gutter) * -1);
   margin-right: calc(var(--graph-gutter) * -1);
 }
+
 .graph-bar {
   background-color: var(--graph-bar-bg);
   color: var(--graph-bar-color);
@@ -22,7 +23,7 @@
   flex-grow: 1;
   line-height: 1.25;
   max-width: 100%;
-  padding: var(--graph-gutter) calc(var(--graph-gutter) * 2);
+  padding: calc(var(--graph-gutter) * 1.5) calc(var(--graph-gutter) * 2);
   margin-left: var(--graph-gutter);
   margin-right: var(--graph-gutter);
   min-height: $graph-bar-step;
@@ -79,6 +80,13 @@
   line-height: 1.429;
 }
 
+@media (max-width: #{$breakpoint-md}) {
+  .score-graph,
+  .score-level-text {
+    font-size: 0.857em;
+  }
+}
+
 @media (min-width: #{$breakpoint-md}) {
   .product-score-section {
     display: flex;
@@ -93,8 +101,4 @@
       margin-left: auto;
     }
   }
-}
-
-@media (min-width: #{$breakpoint-lg}) {
-
 }

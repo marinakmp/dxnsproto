@@ -1,6 +1,4 @@
-const assetsSource = "src/assets/styles/",
-  assetsProduction = "build/";
-
+const assetsSource = "src/assets/styles/";
 const { src, dest, watch, series } = require("gulp");
 
 const del = require("del"),
@@ -42,20 +40,20 @@ function cssbuild() {
       })
     )
     .pipe(autoprefixer())
-    .pipe(dest(assetsProduction + "css"));
+    .pipe(dest(assetsSource + "css"));
 }
 
 // CSS export: compressed
 function cssminTask() {
-  return src([assetsSource + "css/skeleton.css"])
+  return src([assetsSource + "css/skeleton.css", assetsSource + "css/theme.css"])
     .pipe(cleanCSS())
     .pipe(rename({ suffix: ".min" }))
-    .pipe(dest(assetsProduction + "css/"));
+    .pipe(dest(assetsSource + "css/"));
 }
 
 // Remove unnecessary files
 function clean() {
-  return del([assetsProduction + "css/skeleton.css"]);
+  return del([assetsSource + "css/skeleton.css", assetsSource + "css/theme.css"]);
 }
 
 // Watch & reload

@@ -1,3 +1,9 @@
+button[disabled],
+button._disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
 .btn {
   background-color: #EFEFEF;
   border: 1px solid #fff;
@@ -15,14 +21,6 @@
   width: 30px;
   height: 30px;
 }
-//.btn-icon-prev {
-//  background-image: escape-svg($icon-pointer-l);
-//}
-//.btn-icon-next {
-//  left: auto;
-//  right: 0;
-  //background-image: escape-svg($icon-pointer-r);
-//}
 
 .btn-toggle {
   background-color: #fff;
